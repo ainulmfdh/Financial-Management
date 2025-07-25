@@ -51,6 +51,7 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/default', [DefaultController::class, 'index']);
 Route::get('/logintest', [DefaultController::class, 'logintest']);
+Route::get('/registertest', [DefaultController::class, 'registertest']);
 Route::get('/test', [DefaultController::class, 'test']);
 
 
