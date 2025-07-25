@@ -38,7 +38,7 @@ const FileCheck = (props) => (
 
 // Menu Items for Sidebar
 const menuItems = [
-    { label: "Dashboard", icon: <Home className="w-5 h-5" />, to: "/" },
+    { label: "Dashboard", icon: <Home className="w-5 h-5" />, to: "/dashboard" },
 ];
 
 const transaksiItems = [
