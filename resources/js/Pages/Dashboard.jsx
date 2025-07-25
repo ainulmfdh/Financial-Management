@@ -2,7 +2,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Sidebar from '@/Components/Dashboard/Sidebar';
-import Dashboard from '@/Components/Dashboard/Dashboard'
+import Card from '@/Components/Dashboard/Card'
 import Pendapatan from '@/Pages/Incomes/Pendapatan';
 import Pengeluaran from '@/Pages/Expanses/Pengeluaran';
 import Karyawan from '@/Pages/Employes/Karyawan';
@@ -25,7 +25,7 @@ function App({ auth }) {
 
                     </Authenticated>
                     <Routes>
-                        <Route path="/dashboard" element={<Dashboard />} />
+                        <Route path="/dashboard" element={<Card />} />
                         <Route path="/pendapatan" element={<Pendapatan />} />
                         <Route path="/pengeluaran" element={<Pengeluaran />} />
                         <Route path="/karyawan" element={<Karyawan />} />

@@ -1,9 +1,9 @@
 // --- src/pages/Dashboard.jsx ---
 import React from 'react';
-import StatsCard from '../Dashboard/StatsCard';
-import SalesChart from '../Dashboard/SalesChart';
-import RevenueChart from '../Dashboard/RevenueChart';
-import TrafficSources from '../Dashboard/TrafficSources';
+import StatsCard from './StatsCard';
+import SalesChart from './SalesChart';
+import RevenueChart from './RevenueChart';
+import TrafficSources from './TrafficSources';
 import { DollarSign, BanknoteArrowDown, BanknoteArrowUp, UserRound } from 'lucide-react'; // Import icons needed for Dashboard
 
 const Dashboard = () => {

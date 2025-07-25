@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
@@ -8,12 +7,14 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Divider from '@mui/material/Divider';
 import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
+import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
-import AppTheme from '../../../theme/AppTheme';
+import ForgotPassword from '@/Components/Login/ForgotPassword';
+import AppTheme from '../../theme/AppTheme';
 import { GoogleIcon, FacebookIcon, SitemarkIcon } from '@/Components/Login/CustomIcons';
 import { Head, Link, useForm } from '@inertiajs/react';
 
@@ -43,7 +44,8 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
     [theme.breakpoints.up('sm')]: {
         padding: theme.spacing(4),
     },
-    overflowY: 'auto',
+    // Add this line to enable vertical scrolling when content overflows
+    overflowY: 'auto', // or just 'overflow: auto' for both directions if needed
     '&::before': {
         content: '""',
         display: 'block',
@@ -60,55 +62,64 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
     },
 }));
 
-export default function Login({ status, canResetPassword }) {
+export default function SignIn(props) {
+    const [emailError, setEmailError] = React.useState(false);
+    const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
+    const [passwordError, setPasswordError] = React.useState(false);
+    const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
     const [open, setOpen] = React.useState(false);
 
-    const { data, setData, post, processing, errors, reset } = useForm({
-        email: '',
-        password: '',
-        remember: false,
-    });
-
-    useEffect(() => {
-        return () => {
-            reset('password');
-        };
-    }, []);
-
-    const submit = (e) => {
-        e.preventDefault();
-
-        post(route('login'));
+    const handleClickOpen = () => {
+        setOpen(true);
     };
 
-    // const handleClickOpen = () => {
-    //     console.log('handleClickOpen called: Setting open to true');
-    //     setOpen(true);
-    // };
-
-    // const handleClose = () => {
-    //     console.log('handleClose called: Setting open to false');
-    //     setOpen(false);
-    // };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        post(route('login'));
+    const handleClose = () => {
+        setOpen(false);
     };
 
-    const handleForgotPasswordClick = () => {
-        navigate('/forgot-password'); // Arahkan ke halaman forgot password
-        // Atau logika lain yang Anda butuhkan
+    const handleSubmit = (event) => {
+        if (emailError || passwordError) {
+            event.preventDefault();
+            return;
+        }
+        const data = new FormData(event.currentTarget);
+        console.log({
+            email: data.get('email'),
+            password: data.get('password'),
+        });
+    };
+
+    const validateInputs = () => {
+        const email = document.getElementById('email');
+        const password = document.getElementById('password');
+
+        let isValid = true;
+
+        if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
+            setEmailError(true);
+            setEmailErrorMessage('Please enter a valid email address.');
+            isValid = false;
+        } else {
+            setEmailError(false);
+            setEmailErrorMessage('');
+        }
+
+        if (!password.value || password.value.length < 6) {
+            setPasswordError(true);
+            setPasswordErrorMessage('Password must be at least 6 characters long.');
+            isValid = false;
+        } else {
+            setPasswordError(false);
+            setPasswordErrorMessage('');
+        }
+
+        return isValid;
     };
 
     return (
-        <AppTheme>
+        <AppTheme {...props}>
             <CssBaseline enableColorScheme />
             <SignInContainer direction="column" justifyContent="space-between">
-
-
-                <Head title="Sign in" />
-
                 <Card variant="outlined">
                     <SitemarkIcon />
                     <Typography
@@ -118,9 +129,6 @@ export default function Login({ status, canResetPassword }) {
                     >
                         Sign in
                     </Typography>
-
-                    {status && <Typography color="success.main" sx={{ mb: 2 }}>{status}</Typography>}
-
                     <Box
                         component="form"
                         onSubmit={handleSubmit}
@@ -135,25 +143,24 @@ export default function Login({ status, canResetPassword }) {
                         <FormControl>
                             <FormLabel htmlFor="email">Email</FormLabel>
                             <TextField
-                                error={!!errors.email}
-                                helperText={errors.email}
+                                error={emailError}
+                                helperText={emailErrorMessage}
                                 id="email"
                                 type="email"
                                 name="email"
                                 placeholder="your@email.com"
-                                autoComplete="username"
+                                autoComplete="email"
                                 autoFocus
                                 required
                                 fullWidth
                                 variant="outlined"
-                                value={data.email}
-                                onChange={(e) => setData('email', e.target.value)}
+                                color={emailError ? 'error' : 'primary'}
                                 InputProps={{
                                     sx: {
                                         '& input': {
-                                            outline: 'none',
-                                            border: 'none',
-                                            boxShadow: 'none',
+                                            outline: 'none', // hilangkan outline internal
+                                            border: 'none',  // hilangkan border di dalam
+                                            boxShadow: 'none', // hilangkan efek autofill shadow
                                             fontSize: '1rem',
                                         },
                                         '& input:-webkit-autofill': {
@@ -166,28 +173,27 @@ export default function Login({ status, canResetPassword }) {
                                 }}
                             />
                         </FormControl>
-                        {/* Reverted FormControl for password to original styling and moved Link outside */}
                         <FormControl>
                             <FormLabel htmlFor="password">Password</FormLabel>
                             <TextField
-                                error={!!errors.password}
-                                helperText={errors.password}
+                                error={passwordError}
+                                helperText={passwordErrorMessage}
                                 name="password"
                                 placeholder="••••••"
                                 type="password"
                                 id="password"
                                 autoComplete="current-password"
+                                autoFocus
                                 required
                                 fullWidth
                                 variant="outlined"
-                                value={data.password}
-                                onChange={(e) => setData('password', e.target.value)}
+                                color={passwordError ? 'error' : 'primary'}
                                 InputProps={{
                                     sx: {
                                         '& input': {
-                                            outline: 'none',
-                                            border: 'none',
-                                            boxShadow: 'none',
+                                            outline: 'none', // hilangkan outline internal
+                                            border: 'none',  // hilangkan border di dalam
+                                            boxShadow: 'none', // hilangkan efek autofill shadow
                                             fontSize: '1rem',
                                         },
                                         '& input:-webkit-autofill': {
@@ -201,45 +207,34 @@ export default function Login({ status, canResetPassword }) {
                             />
                         </FormControl>
                         <FormControlLabel
-                            control={
-                                <Checkbox
-                                    name="remember"
-                                    checked={data.remember}
-                                    onChange={(e) => setData('remember', e.target.checked)}
-                                    color="primary"
-                                />
-                            }
+                            control={<Checkbox value="remember" color="primary" />}
                             label="Remember me"
                         />
-
+                        <ForgotPassword open={open} handleClose={handleClose} />
                         <Button
                             type="submit"
                             fullWidth
                             variant="contained"
-                            disabled={processing}
+                            onClick={validateInputs}
                         >
                             Sign in
                         </Button>
-
-                        <Box sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
-                            <Link
-                                component="button"
-                                type="button"
-                                variant="body2"
-                                href="/forgot-password"
-                                sx={{ color: 'primary.main' }}
-                            >
-                                Forgot your password?
-                            </Link>
-                        </Box>
-
+                        <Link
+                            component="button"
+                            type="button"
+                            onClick={handleClickOpen}
+                            variant="body2"
+                            sx={{ alignSelf: 'center' }}
+                        >
+                            Forgot your password?
+                        </Link>
                     </Box>
                     <Divider>or</Divider>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                         <Button
                             fullWidth
                             variant="outlined"
-                            onClick={() => console.log('Sign in with Google')}
+                            onClick={() => alert('Sign in with Google')}
                             startIcon={<GoogleIcon />}
                         >
                             Sign in with Google
@@ -247,7 +242,7 @@ export default function Login({ status, canResetPassword }) {
                         <Button
                             fullWidth
                             variant="outlined"
-                            onClick={() => console.log('Sign in with Facebook')}
+                            onClick={() => alert('Sign in with Facebook')}
                             startIcon={<FacebookIcon />}
                         >
                             Sign in with Facebook
@@ -255,7 +250,7 @@ export default function Login({ status, canResetPassword }) {
                         <Typography sx={{ textAlign: 'center' }}>
                             Don&apos;t have an account?{' '}
                             <Link
-                                href={route('register')}
+                                href="/material-ui/getting-started/templates/sign-in/"
                                 variant="body2"
                                 sx={{ alignSelf: 'center' }}
                             >
