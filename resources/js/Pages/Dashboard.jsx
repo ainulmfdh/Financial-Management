@@ -1,21 +1,53 @@
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
+// --- src/App.jsx ---
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Sidebar from '@/Components/Dashboard/Sidebar';
+import Dashboard from '@/Components/Dashboard/Dashboard'
+import Pendapatan from '@/Pages/Incomes/Pendapatan';
+import Pengeluaran from '@/Pages/Expanses/Pengeluaran';
+import Karyawan from '@/Pages/Employes/Karyawan';
+import Hutang from '@/Pages/Hutang/Hutang';
+import Laporan from '@/Pages/Laporan/Laporan';
+import Authenticated from '@/Layouts/AuthenticatedLayout';
 
-export default function Dashboard({ auth }) {
+// Main App Component
+function App({ auth }) {
     return (
-        <AuthenticatedLayout
-            user={auth.user}
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Dashboard</h2>}
-        >
-            <Head title="Dashboard" />
+        <Router>
+            <div className="flex min-h-screen font-sans antialiased">
+                {/* Sidebar akan selalu ada di sisi kiri */}
+                <Sidebar />
 
-            <div className="py-12">
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div className="p-6 text-gray-900">You're logged in!</div>
+                {/* Konten utama yang akan berubah berdasarkan rute */}
+                <div className="flex-1 flex flex-col">
+                    {/* Header akan selalu ada di atas konten utama */}
+                    <Authenticated user={auth.user}>
+
+                    </Authenticated>
+                    <Routes>
+                        <Route path="/dashboard" element={<Dashboard />} />
+                        <Route path="/pendapatan" element={<Pendapatan />} />
+                        <Route path="/pengeluaran" element={<Pengeluaran />} />
+                        <Route path="/karyawan" element={<Karyawan />} />
+                        <Route path="/hutang" element={<Hutang />} />
+                        <Route path="/laporan" element={<Laporan />} />
+                        {/* Rute fallback untuk halaman yang tidak ditemukan */}
+                        <Route path="*" element={
+                            <div className="p-6 text-center text-red-500 text-3xl font-bold">
+                                404 - Halaman Tidak Ditemukan
+                            </div>
+                        } />
+                    </Routes>
+                    {/* Footer bisa ditambahkan di sini jika ingin selalu ada */}
+                    <div className="px-6 py-4 text-center mt-auto"> {/* mt-auto untuk mendorong footer ke bawah */}
+                        <p className="text-sm text-gray-500">
+                            Distributed by <a href="#" className="text-blue-600 hover:underline">FinanceManager</a>
+                        </p>
                     </div>
                 </div>
             </div>
-        </AuthenticatedLayout>
+        </Router>
     );
 }
+
+export default App;
