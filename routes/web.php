@@ -5,6 +5,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\DefaultController;
+use App\Http\Controllers\Api\IncomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,6 +48,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// INCOMES
+Route::get('/pendapatan/tambah', function () {
+    return Inertia::render('Incomes/CreateIncome');
+});
 
 
 Route::get('/default', [DefaultController::class, 'index']);
@@ -54,5 +59,9 @@ Route::get('/logintest', [DefaultController::class, 'logintest']);
 Route::get('/registertest', [DefaultController::class, 'registertest']);
 Route::get('/test', [DefaultController::class, 'test']);
 
+// fallback route untuk semua halaman React/Inertia
+Route::get('/{any}', function () {
+    return Inertia::render('Dashboard');
+})->where('any', '.*')->middleware(['auth']);
 
 require __DIR__.'/auth.php';

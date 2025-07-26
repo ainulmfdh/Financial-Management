@@ -2,7 +2,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Sidebar from '@/Components/Dashboard/Sidebar';
-import Card from '@/Components/Dashboard/Card'
+import CardDashboard from '@/Components/Dashboard/Card'
 import Pendapatan from '@/Pages/Incomes/Pendapatan';
 import Pengeluaran from '@/Pages/Expanses/Pengeluaran';
 import Karyawan from '@/Pages/Employes/Karyawan';
@@ -22,22 +22,21 @@ function App({ auth }) {
                 <div className="flex-1 flex flex-col">
                     {/* Header akan selalu ada di atas konten utama */}
                     <Authenticated user={auth.user}>
-
+                        <Routes>
+                            <Route path="/dashboard" element={<CardDashboard />} />
+                            <Route path="/pendapatan" element={<Pendapatan />} />
+                            <Route path="/pengeluaran" element={<Pengeluaran />} />
+                            <Route path="/karyawan" element={<Karyawan />} />
+                            <Route path="/hutang" element={<Hutang />} />
+                            <Route path="/laporan" element={<Laporan />} />
+                            <Route path="*" element={
+                                <div className="p-6 text-center text-red-500 text-3xl font-bold">
+                                    404 - Halaman Tidak Ditemukan
+                                </div>
+                            } />
+                        </Routes>
                     </Authenticated>
-                    <Routes>
-                        <Route path="/dashboard" element={<Card />} />
-                        <Route path="/pendapatan" element={<Pendapatan />} />
-                        <Route path="/pengeluaran" element={<Pengeluaran />} />
-                        <Route path="/karyawan" element={<Karyawan />} />
-                        <Route path="/hutang" element={<Hutang />} />
-                        <Route path="/laporan" element={<Laporan />} />
-                        {/* Rute fallback untuk halaman yang tidak ditemukan */}
-                        <Route path="*" element={
-                            <div className="p-6 text-center text-red-500 text-3xl font-bold">
-                                404 - Halaman Tidak Ditemukan
-                            </div>
-                        } />
-                    </Routes>
+
                     {/* Footer bisa ditambahkan di sini jika ingin selalu ada */}
                     <div className="px-6 py-4 text-center mt-auto"> {/* mt-auto untuk mendorong footer ke bawah */}
                         <p className="text-sm text-gray-500">
