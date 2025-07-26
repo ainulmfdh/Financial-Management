@@ -40,12 +40,12 @@ const Pendapatan = () => {
         <div className="w-full max-w-5xl mx-auto">
             <Box sx={{ flexGrow: 1 }} className="mb-2">
                 <Grid container spacing={2} alignItems="center">
-                    <Grid item xs={6}>
+                    <Grid size={6}>
                         <Item>
                             <p className="font-bold text-2xl">DATA PEMASUKAN</p>
                         </Item>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid size={6}>
                         <Item>
                             <div className="flex justify-end">
                                 <Button
